@@ -72,8 +72,10 @@ def _do_transcribe(file_bytes: bytes) -> str:
 
     wav_path = ogg_path.replace(".ogg", ".wav")
     try:
+        import imageio_ffmpeg
+        ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
         subprocess.run(
-            ["ffmpeg", "-y", "-i", ogg_path, "-ar", "16000", "-ac", "1", wav_path],
+            [ffmpeg_exe, "-y", "-i", ogg_path, "-ar", "16000", "-ac", "1", wav_path],
             check=True, capture_output=True
         )
         model = _get_whisper()
