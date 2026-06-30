@@ -33,7 +33,10 @@ SYSTEM_PROMPT = """أنت مساعد شخصي ذكي. مهمتك تحليل رس
 
 
 def parse_message(text: str) -> dict:
-    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    from datetime import timezone, timedelta
+    tz_offset = int(os.environ.get("TZ_OFFSET", "3"))
+    local_now = datetime.now(timezone.utc) + timedelta(hours=tz_offset)
+    now = local_now.strftime("%Y-%m-%d %H:%M")
     prompt = SYSTEM_PROMPT.format(now=now)
 
     response = client.messages.create(
