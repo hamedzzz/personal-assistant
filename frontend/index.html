@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>المساعد الشخصي</title>
+<title>Personal Assistant</title>
 <style>
   :root {
     --bg: #0f0f1a;
@@ -28,10 +28,8 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    direction: rtl;
   }
 
-  /* ── Header ── */
   header {
     background: linear-gradient(135deg, #1a0533 0%, #0f0f1a 100%);
     border-bottom: 1px solid var(--border);
@@ -47,30 +45,18 @@
     backdrop-filter: blur(10px);
   }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
+  .logo { display: flex; align-items: center; gap: 12px; }
   .logo-icon {
     width: 44px; height: 44px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     border-radius: 12px;
-    display: grid;
-    place-items: center;
+    display: grid; place-items: center;
     font-size: 22px;
   }
-
   .logo h1 { font-size: 20px; font-weight: 700; }
   .logo p { font-size: 12px; color: var(--text2); margin-top: 2px; }
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
+  .header-right { display: flex; align-items: center; gap: 12px; }
   .stat-badge {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -79,7 +65,6 @@
     font-size: 13px;
     color: var(--text2);
   }
-
   .stat-badge span { color: var(--accent2); font-weight: 700; }
 
   .refresh-btn {
@@ -94,17 +79,11 @@
   }
   .refresh-btn:hover { border-color: var(--accent); color: var(--accent2); }
 
-  /* ── Layout ── */
-  .main {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 28px 24px;
-  }
+  .main { max-width: 1400px; margin: 0 auto; padding: 28px 24px; }
 
-  /* ── Stats Row ── */
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 16px;
     margin-bottom: 28px;
   }
@@ -114,69 +93,47 @@
     border: 1px solid var(--border);
     border-radius: var(--card-radius);
     padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
+    display: flex; align-items: center; gap: 16px;
     cursor: pointer;
     transition: all .2s;
   }
   .stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .stat-card.active { border-color: var(--accent2); background: rgba(124,58,237,.1); }
-
   .stat-icon {
     width: 48px; height: 48px;
     border-radius: 12px;
-    display: grid;
-    place-items: center;
-    font-size: 22px;
-    flex-shrink: 0;
+    display: grid; place-items: center;
+    font-size: 22px; flex-shrink: 0;
   }
-
   .stat-card h3 { font-size: 26px; font-weight: 800; line-height: 1; }
   .stat-card p { font-size: 13px; color: var(--text2); margin-top: 4px; }
 
-  /* ── Filters ── */
   .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 24px; flex-wrap: wrap;
   }
-
   .filter-btn {
     border: 1px solid var(--border);
     background: var(--surface);
     border-radius: 999px;
     padding: 8px 18px;
     color: var(--text2);
-    cursor: pointer;
-    font-size: 14px;
-    transition: all .2s;
+    cursor: pointer; font-size: 14px; transition: all .2s;
   }
   .filter-btn:hover { border-color: var(--accent); color: var(--text); }
-  .filter-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
   .search-box {
-    margin-right: auto;
+    margin-left: auto;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 8px 16px;
     color: var(--text);
-    font-size: 14px;
-    width: 220px;
-    outline: none;
-    transition: border .2s;
+    font-size: 14px; width: 220px; outline: none; transition: border .2s;
   }
   .search-box:focus { border-color: var(--accent); }
   .search-box::placeholder { color: var(--text2); }
 
-  /* ── Cards Grid ── */
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -188,103 +145,46 @@
     border: 1px solid var(--border);
     border-radius: var(--card-radius);
     padding: 20px;
-    position: relative;
-    transition: all .2s;
-    overflow: hidden;
+    position: relative; transition: all .2s; overflow: hidden;
   }
   .card:hover { border-color: #4a4a7a; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,.3); }
   .card.done { opacity: .45; }
 
   .card-accent {
-    position: absolute;
-    top: 0; right: 0;
-    width: 4px;
-    height: 100%;
-    border-radius: 0 var(--card-radius) var(--card-radius) 0;
+    position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%;
+    border-radius: var(--card-radius) 0 0 var(--card-radius);
   }
 
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
+  .card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
   .cat-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border-radius: 999px;
-    padding: 4px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    flex-shrink: 0;
+    display: inline-flex; align-items: center; gap: 6px;
+    border-radius: 999px; padding: 4px 12px;
+    font-size: 12px; font-weight: 600; flex-shrink: 0;
   }
+  .card-title { font-size: 16px; font-weight: 700; line-height: 1.4; flex: 1; }
+  .card-details { font-size: 13px; color: var(--text2); margin-bottom: 12px; line-height: 1.6; }
 
-  .card-title {
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.4;
-    flex: 1;
-  }
-
-  .card-details {
-    font-size: 13px;
-    color: var(--text2);
-    margin-bottom: 12px;
-    line-height: 1.6;
-  }
-
-  .card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-
+  .card-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
   .meta-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
+    display: inline-flex; align-items: center; gap: 5px;
     background: rgba(255,255,255,.05);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 12px;
-    color: var(--text2);
+    border-radius: 8px; padding: 4px 10px;
+    font-size: 12px; color: var(--text2);
   }
 
-  .card-actions {
-    display: flex;
-    gap: 8px;
-  }
-
+  .card-actions { display: flex; gap: 8px; }
   .btn-done, .btn-delete {
-    flex: 1;
-    border: none;
-    border-radius: 10px;
-    padding: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all .2s;
-    font-weight: 600;
+    flex: 1; border: none; border-radius: 10px;
+    padding: 8px; font-size: 13px; cursor: pointer;
+    transition: all .2s; font-weight: 600;
   }
-
-  .btn-done {
-    background: rgba(16,185,129,.15);
-    color: var(--green);
-    border: 1px solid rgba(16,185,129,.3);
-  }
+  .btn-done { background: rgba(16,185,129,.15); color: var(--green); border: 1px solid rgba(16,185,129,.3); }
   .btn-done:hover { background: rgba(16,185,129,.3); }
-
-  .btn-delete {
-    background: rgba(239,68,68,.1);
-    color: var(--red);
-    border: 1px solid rgba(239,68,68,.2);
-  }
+  .btn-delete { background: rgba(239,68,68,.1); color: var(--red); border: 1px solid rgba(239,68,68,.2); }
   .btn-delete:hover { background: rgba(239,68,68,.25); }
 
-  /* ── Expense chart ── */
   .expense-section {
     margin-top: 36px;
     background: var(--surface);
@@ -292,58 +192,21 @@
     border-radius: var(--card-radius);
     padding: 24px;
   }
-
-  .section-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
+  .section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
   .expense-bar-wrap { margin-bottom: 14px; }
-  .expense-bar-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-    margin-bottom: 6px;
-  }
+  .expense-bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
   .expense-bar-label span:first-child { color: var(--text); }
   .expense-bar-label span:last-child { color: var(--accent2); font-weight: 700; }
-  .expense-bar-bg {
-    background: rgba(255,255,255,.06);
-    border-radius: 999px;
-    height: 8px;
-    overflow: hidden;
-  }
-  .expense-bar-fill {
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    transition: width .6s ease;
-  }
+  .expense-bar-bg { background: rgba(255,255,255,.06); border-radius: 999px; height: 8px; overflow: hidden; }
+  .expense-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s ease; }
 
-  /* ── Empty ── */
-  .empty {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 64px 20px;
-    color: var(--text2);
-  }
+  .empty { grid-column: 1/-1; text-align: center; padding: 64px 20px; color: var(--text2); }
   .empty .emoji { font-size: 56px; margin-bottom: 16px; }
   .empty p { font-size: 16px; }
 
-  /* ── Loading ── */
-  .loading {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 64px;
-    color: var(--text2);
-    font-size: 22px;
-  }
+  .loading { grid-column: 1/-1; text-align: center; padding: 64px; color: var(--text2); font-size: 22px; }
 
-  /* category colors */
+  /* category styles — keep Arabic keys since data is Arabic */
   .cat-مواعيد   { background: rgba(59,130,246,.15); color: #93c5fd; }
   .cat-مهام     { background: rgba(16,185,129,.15); color: #6ee7b7; }
   .cat-مصروفات  { background: rgba(245,158,11,.15); color: #fcd34d; }
@@ -365,7 +228,7 @@
   @media (max-width: 600px) {
     header { padding: 16px; }
     .main { padding: 16px; }
-    .search-box { width: 100%; }
+    .search-box { width: 100%; margin-left: 0; }
   }
 </style>
 </head>
@@ -375,53 +238,48 @@
   <div class="logo">
     <div class="logo-icon">🤖</div>
     <div>
-      <h1>المساعد الشخصي</h1>
-      <p>منظم مواعيد ومهام ومصروفات</p>
+      <h1>Personal Assistant</h1>
+      <p>Appointments · Tasks · Expenses · Reminders</p>
     </div>
   </div>
   <div class="header-right">
-    <div class="stat-badge" id="total-badge">إجمالي: <span id="total-count">—</span></div>
-    <button class="refresh-btn" onclick="loadAll()">🔄 تحديث</button>
+    <div class="stat-badge">Total: <span id="total-count">—</span></div>
+    <button class="refresh-btn" onclick="loadAll()">🔄 Refresh</button>
   </div>
 </header>
 
 <div class="main">
 
-  <!-- Stats -->
-  <div class="stats-grid" id="stats-grid">
-    <!-- injected -->
-  </div>
+  <div class="stats-grid" id="stats-grid"></div>
 
-  <!-- Toolbar -->
   <div class="toolbar">
-    <button class="filter-btn active" data-cat="" onclick="setFilter(this, '')">الكل</button>
-    <button class="filter-btn" data-cat="مواعيد"  onclick="setFilter(this,'مواعيد')">📅 مواعيد</button>
-    <button class="filter-btn" data-cat="مهام"    onclick="setFilter(this,'مهام')">✅ مهام</button>
-    <button class="filter-btn" data-cat="مصروفات" onclick="setFilter(this,'مصروفات')">💰 مصروفات</button>
-    <button class="filter-btn" data-cat="تذكيرات" onclick="setFilter(this,'تذكيرات')">🔔 تذكيرات</button>
-    <button class="filter-btn" data-cat="ملاحظات" onclick="setFilter(this,'ملاحظات')">📝 ملاحظات</button>
-    <button class="filter-btn" data-cat="done"    onclick="setFilter(this,'done')">☑️ المنتهية</button>
-    <input class="search-box" id="search" placeholder="🔍 ابحث..." oninput="renderCards()">
+    <button class="filter-btn active" data-cat="" onclick="setFilter(this,'')">All</button>
+    <button class="filter-btn" data-cat="مواعيد"  onclick="setFilter(this,'مواعيد')">📅 Appointments</button>
+    <button class="filter-btn" data-cat="مهام"    onclick="setFilter(this,'مهام')">✅ Tasks</button>
+    <button class="filter-btn" data-cat="مصروفات" onclick="setFilter(this,'مصروفات')">💰 Expenses</button>
+    <button class="filter-btn" data-cat="تذكيرات" onclick="setFilter(this,'تذكيرات')">🔔 Reminders</button>
+    <button class="filter-btn" data-cat="ملاحظات" onclick="setFilter(this,'ملاحظات')">📝 Notes</button>
+    <button class="filter-btn" data-cat="done"    onclick="setFilter(this,'done')">☑️ Done</button>
+    <input class="search-box" id="search" placeholder="🔍 Search..." oninput="renderCards()">
   </div>
 
-  <!-- Cards -->
   <div class="cards-grid" id="cards-grid">
-    <div class="loading">⏳ جاري التحميل...</div>
+    <div class="loading">⏳ Loading...</div>
   </div>
 
-  <!-- Expense Summary -->
   <div class="expense-section" id="expense-section" style="display:none">
-    <div class="section-title">💰 ملخص المصروفات</div>
+    <div class="section-title">💰 Expense Summary</div>
     <div id="expense-bars"></div>
     <div style="margin-top:16px; font-size:15px; color:var(--text2)">
-      الإجمالي: <strong id="expense-total" style="color:var(--accent2)"></strong>
+      Total: <strong id="expense-total" style="color:var(--accent2)"></strong>
     </div>
   </div>
 
 </div>
 
 <script>
-const EMOJI = {مواعيد:'📅', مهام:'✅', مصروفات:'💰', تذكيرات:'🔔', ملاحظات:'📝'};
+const CAT_LABEL = {مواعيد:'Appointments', مهام:'Tasks', مصروفات:'Expenses', تذكيرات:'Reminders', ملاحظات:'Notes'};
+const EMOJI     = {مواعيد:'📅', مهام:'✅', مصروفات:'💰', تذكيرات:'🔔', ملاحظات:'📝'};
 let allItems = [];
 let currentFilter = '';
 
@@ -432,9 +290,7 @@ async function api(path, opts={}) {
 
 async function loadAll() {
   const [items, stats, expSummary] = await Promise.all([
-    api('/items'),
-    api('/stats'),
-    api('/expenses/summary'),
+    api('/items'), api('/stats'), api('/expenses/summary'),
   ]);
   allItems = items;
   renderStats(stats);
@@ -444,29 +300,17 @@ async function loadAll() {
 }
 
 function renderStats(stats) {
-  const cats = [
-    {cat:'مواعيد',  emoji:'📅'},
-    {cat:'مهام',    emoji:'✅'},
-    {cat:'مصروفات', emoji:'💰'},
-    {cat:'تذكيرات', emoji:'🔔'},
-    {cat:'ملاحظات', emoji:'📝'},
-  ];
+  const cats = ['مواعيد','مهام','مصروفات','تذكيرات','ملاحظات'];
   const byCat = Object.fromEntries((stats.by_category||[]).map(r=>[r.category, r.cnt]));
-  const done = stats.done || 0;
-
-  const grid = document.getElementById('stats-grid');
-  grid.innerHTML = cats.map(({cat, emoji}) => `
-    <div class="stat-card" onclick="setFilterById('${cat}')" id="sc-${cat}">
-      <div class="stat-icon icon-${cat}">${emoji}</div>
-      <div>
-        <h3>${byCat[cat]||0}</h3>
-        <p>${cat}</p>
-      </div>
-    </div>
-  `).join('') + `
+  document.getElementById('stats-grid').innerHTML =
+    cats.map(cat => `
+      <div class="stat-card" onclick="setFilterById('${cat}')">
+        <div class="stat-icon icon-${cat}">${EMOJI[cat]}</div>
+        <div><h3>${byCat[cat]||0}</h3><p>${CAT_LABEL[cat]}</p></div>
+      </div>`).join('') + `
     <div class="stat-card" onclick="setFilterById('done')">
       <div class="stat-icon" style="background:rgba(16,185,129,.15)">☑️</div>
-      <div><h3>${done}</h3><p>منتهية</p></div>
+      <div><h3>${stats.done||0}</h3><p>Done</p></div>
     </div>`;
 }
 
@@ -484,48 +328,40 @@ function setFilter(btn, cat) {
 
 function renderCards() {
   const search = document.getElementById('search').value.toLowerCase();
-  let items = allItems;
+  let items = currentFilter === 'done'
+    ? allItems.filter(i => i.done)
+    : allItems.filter(i => !i.done && (!currentFilter || i.category === currentFilter));
 
-  if (currentFilter === 'done') {
-    items = items.filter(i => i.done);
-  } else {
-    items = items.filter(i => !i.done);
-    if (currentFilter) items = items.filter(i => i.category === currentFilter);
-  }
-
-  if (search) {
-    items = items.filter(i =>
-      i.title.toLowerCase().includes(search) ||
-      (i.details||'').toLowerCase().includes(search)
-    );
-  }
+  if (search) items = items.filter(i =>
+    i.title.toLowerCase().includes(search) || (i.details||'').toLowerCase().includes(search));
 
   const grid = document.getElementById('cards-grid');
   if (!items.length) {
-    grid.innerHTML = `<div class="empty"><div class="emoji">🎉</div><p>مفيش عناصر هنا دلوقتي</p></div>`;
+    grid.innerHTML = `<div class="empty"><div class="emoji">🎉</div><p>Nothing here yet</p></div>`;
     return;
   }
 
   grid.innerHTML = items.map(item => {
     const emoji = EMOJI[item.category] || '📌';
-    const isOverdue = item.remind_at && !item.reminded && new Date(item.remind_at) < new Date();
+    const label = CAT_LABEL[item.category] || item.category;
+    const overdue = item.remind_at && !item.reminded && new Date(item.remind_at) < new Date();
     return `
-    <div class="card ${item.done ? 'done' : ''}" id="card-${item.id}">
+    <div class="card ${item.done?'done':''}" id="card-${item.id}">
       <div class="card-accent accent-${item.category}"></div>
       <div class="card-header">
-        <span class="cat-badge cat-${item.category}">${emoji} ${item.category}</span>
+        <span class="cat-badge cat-${item.category}">${emoji} ${label}</span>
       </div>
       <div class="card-title">${esc(item.title)}</div>
       ${item.details ? `<div class="card-details">${esc(item.details)}</div>` : ''}
       <div class="card-meta">
-        ${item.remind_at ? `<span class="meta-tag" style="${isOverdue?'color:#ef4444':''}">⏰ ${item.remind_at}</span>` : ''}
+        ${item.remind_at ? `<span class="meta-tag" style="${overdue?'color:#ef4444':''}">⏰ ${item.remind_at}</span>` : ''}
         ${item.amount ? `<span class="meta-tag">💵 ${item.amount} ${item.currency}</span>` : ''}
-        <span class="meta-tag" style="color:#475569">${item.created_at ? item.created_at.slice(0,10) : ''}</span>
+        <span class="meta-tag" style="color:#475569">${(item.created_at||'').slice(0,10)}</span>
       </div>
       ${!item.done ? `
       <div class="card-actions">
-        <button class="btn-done" onclick="markDone(${item.id})">✅ خلصت</button>
-        <button class="btn-delete" onclick="deleteItem(${item.id})">🗑️ حذف</button>
+        <button class="btn-done" onclick="markDone(${item.id})">✅ Done</button>
+        <button class="btn-delete" onclick="deleteItem(${item.id})">🗑️ Delete</button>
       </div>` : ''}
     </div>`;
   }).join('');
@@ -542,7 +378,7 @@ function renderExpenses(summary) {
   document.getElementById('expense-bars').innerHTML = summary.map(r => `
     <div class="expense-bar-wrap">
       <div class="expense-bar-label">
-        <span>${r.expense_category||'أخرى'}</span>
+        <span>${r.expense_category||'Other'}</span>
         <span>${r.total.toFixed(2)} ${r.currency}</span>
       </div>
       <div class="expense-bar-bg">
@@ -558,17 +394,16 @@ async function markDone(id) {
 }
 
 async function deleteItem(id) {
-  if (!confirm('تمسح العنصر ده؟')) return;
+  if (!confirm('Delete this item?')) return;
   await api(`/items/${id}`, {method:'DELETE'});
   allItems = allItems.filter(i => i.id!==id);
   renderCards();
 }
 
-function esc(str) {
-  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// Auto-refresh every 30s
 setInterval(loadAll, 30000);
 loadAll();
 </script>

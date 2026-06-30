@@ -58,7 +58,7 @@ def _get_whisper():
     if _whisper_model is None:
         from faster_whisper import WhisperModel
         print("⏳ بيحمل موديل Whisper (أول مرة بس)...")
-        _whisper_model = WhisperModel("tiny", device="cpu", compute_type="int8")
+        _whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
         print("✅ موديل Whisper جاهز")
     return _whisper_model
 
@@ -77,7 +77,7 @@ def _do_transcribe(file_bytes: bytes) -> str:
             check=True, capture_output=True
         )
         model = _get_whisper()
-        segments, _ = model.transcribe(wav_path, language="ar")
+        segments, _ = model.transcribe(wav_path)  # auto-detect language
         text = " ".join(s.text for s in segments).strip()
         return text or "مقدرتش أفهم الصوت"
     finally:
