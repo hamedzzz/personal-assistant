@@ -51,45 +51,23 @@ def parse_message(text: str) -> dict:
     return json.loads(raw)
 
 
-_whisper_model = None
+async def transcribe_voice(file_bytes: bytes, mime_type: str = "audio/ogg") -> str:
+    """Transcribe voice using Groq Whisper API (free, no local model needed)."""
+    import tempfile, os
+    from groq import Groq
 
-def _get_whisper():
-    global _whisper_model
-    if _whisper_model is None:
-        from faster_whisper import WhisperModel
-        print("⏳ بيحمل موديل Whisper (أول مرة بس)...")
-        _whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
-        print("✅ موديل Whisper جاهز")
-    return _whisper_model
-
-
-def _do_transcribe(file_bytes: bytes) -> str:
-    import tempfile, os, subprocess
+    groq_client = Groq(api_key=os.environ["GROQ_API_KEY"])
 
     with tempfile.NamedTemporaryFile(suffix=".ogg", delete=False) as f:
         f.write(file_bytes)
-        ogg_path = f.name
+        tmp_path = f.name
 
-    wav_path = ogg_path.replace(".ogg", ".wav")
     try:
-        import imageio_ffmpeg
-        ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
-        subprocess.run(
-            [ffmpeg_exe, "-y", "-i", ogg_path, "-ar", "16000", "-ac", "1", wav_path],
-            check=True, capture_output=True
-        )
-        model = _get_whisper()
-        segments, _ = model.transcribe(wav_path)  # auto-detect language
-        text = " ".join(s.text for s in segments).strip()
-        return text or "مقدرتش أفهم الصوت"
+        with open(tmp_path, "rb") as audio_file:
+            result = groq_client.audio.transcriptions.create(
+                model="whisper-large-v3",
+                file=("voice.ogg", audio_file, "audio/ogg"),
+            )
+        return result.text.strip() or "Could not understand audio"
     finally:
-        for p in (ogg_path, wav_path):
-            if os.path.exists(p):
-                os.unlink(p)
-
-
-async def transcribe_voice(file_bytes: bytes, mime_type: str = "audio/ogg") -> str:
-    """Run blocking Whisper transcription in a thread so it doesn't block the bot."""
-    import asyncio
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, _do_transcribe, file_bytes)
+        os.unlink(tmp_path)
