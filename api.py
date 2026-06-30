@@ -45,6 +45,21 @@ def create_item():
     return jsonify({"id": item_id})
 
 
+@app.patch("/api/items/<int:item_id>")
+def edit_item(item_id):
+    data = request.json
+    db.update_item(
+        item_id,
+        title=data.get("title"),
+        details=data.get("details"),
+        remind_at=data.get("remind_at"),
+        amount=data.get("amount"),
+        currency=data.get("currency", "EGP"),
+        category=data.get("category"),
+    )
+    return jsonify({"ok": True})
+
+
 @app.patch("/api/items/<int:item_id>/done")
 def complete_item(item_id):
     db.mark_done(item_id)

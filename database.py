@@ -91,6 +91,14 @@ def mark_reminded(item_id):
         conn.execute("UPDATE items SET reminded=1 WHERE id=?", (item_id,))
 
 
+def update_item(item_id, title, details, remind_at, amount, currency, category):
+    with get_conn() as conn:
+        conn.execute("""UPDATE items SET title=?, details=?, remind_at=?,
+                        amount=?, currency=?, category=?, reminded=0
+                        WHERE id=?""",
+                     (title, details, remind_at, amount, currency, category, item_id))
+
+
 def mark_done(item_id):
     with get_conn() as conn:
         conn.execute("UPDATE items SET done=1 WHERE id=?", (item_id,))
