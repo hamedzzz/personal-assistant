@@ -156,7 +156,12 @@ def run_bot():
     app.add_handler(CommandHandler("done", cmd_done))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
-    print("🤖 البوت شغال...")
+
+    # Reminder scheduler — runs inside the bot's own event loop every 60s
+    from scheduler import check_reminders
+    app.job_queue.run_repeating(check_reminders, interval=60, first=10)
+
+    print("Bot is running...")
     app.run_polling(drop_pending_updates=True)
 
 

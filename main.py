@@ -13,7 +13,6 @@ sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 load_dotenv()
 
 import database as db
-import scheduler as sched
 from api import app as flask_app
 
 PORT = int(os.environ.get("PORT", 8765))
@@ -75,15 +74,8 @@ def main():
             print(f"Public URL: {public_url}")
             asyncio.run(notify_url(public_url))
 
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    scheduler = sched.start_scheduler()
-
     from bot import run_bot
-    try:
-        run_bot()
-    finally:
-        scheduler.shutdown()
+    run_bot()
 
 
 if __name__ == "__main__":

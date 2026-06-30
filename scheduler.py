@@ -1,15 +1,5 @@
-import asyncio
 import os
-import httpx
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from dotenv import load_dotenv
-
 import database as db
-
-load_dotenv()
-
-TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 
 CATEGORY_EMOJI = {
     "مواعيد": "📅",
@@ -19,33 +9,22 @@ CATEGORY_EMOJI = {
     "ملاحظات": "📝",
 }
 
-
-async def send_telegram(text: str):
-    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    async with httpx.AsyncClient() as client:
-        await client.post(url, json={
-            "chat_id": CHAT_ID,
-            "text": text,
-            "parse_mode": "Markdown"
-        })
+# Timezone offset in hours (Egypt = UTC+3)
+TZ_OFFSET = int(os.environ.get("TZ_OFFSET", "3"))
 
 
-async def check_reminders():
-    pending = db.get_pending_reminders()
+async def check_reminders(context):
+    """Called every minute by the bot's job queue."""
+    bot = context.bot
+    chat_id = os.environ["TELEGRAM_CHAT_ID"]
+    pending = db.get_pending_reminders(tz_offset=TZ_OFFSET)
     for item in pending:
         emoji = CATEGORY_EMOJI.get(item["category"], "🔔")
-        msg = f"{emoji} *تذكير!*\n\n*{item['title']}*"
+        msg = f"{emoji} *Reminder!*\n\n*{item['title']}*"
         if item["details"]:
             msg += f"\n_{item['details']}_"
         if item["amount"]:
             msg += f"\n💵 {item['amount']} {item['currency']}"
-        msg += f"\n\n_ID: {item['id']} — /done {item['id']} لما تخلص_"
-        await send_telegram(msg)
+        msg += f"\n\n/done {item['id']} when finished"
+        await bot.send_message(chat_id=chat_id, text=msg, parse_mode="Markdown")
         db.mark_reminded(item["id"])
-
-
-def start_scheduler():
-    scheduler = AsyncIOScheduler()
-    scheduler.add_job(check_reminders, "interval", minutes=1)
-    scheduler.start()
-    return scheduler

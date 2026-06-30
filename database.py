@@ -77,12 +77,15 @@ def get_items(category=None, done=None):
         return [dict(r) for r in conn.execute(query, params).fetchall()]
 
 
-def get_pending_reminders():
-    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+def get_pending_reminders(tz_offset: int = 3):
+    """Compare remind_at (local time) against UTC now shifted by tz_offset."""
+    from datetime import timezone, timedelta
+    local_now = datetime.now(timezone.utc) + timedelta(hours=tz_offset)
+    now_str = local_now.strftime("%Y-%m-%d %H:%M")
     with get_conn() as conn:
         return [dict(r) for r in conn.execute(
             "SELECT * FROM items WHERE remind_at <= ? AND reminded=0 AND done=0",
-            (now,)
+            (now_str,)
         ).fetchall()]
 
 
