@@ -67,10 +67,13 @@ def main():
     time.sleep(1)
     print(f"Web dashboard: http://localhost:{PORT}")
 
-    public_url = start_ngrok()
-    if public_url:
-        print(f"Public URL: {public_url}")
-        asyncio.run(notify_url(public_url))
+    # Skip ngrok on Railway (it has its own public URL)
+    on_railway = os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("RAILWAY_SERVICE_NAME")
+    if not on_railway:
+        public_url = start_ngrok()
+        if public_url:
+            print(f"Public URL: {public_url}")
+            asyncio.run(notify_url(public_url))
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
