@@ -1,0 +1,7 @@
+.env
+*.db
+*.log
+__pycache__/
+_launcher.bat
+ngrok.exe
+bot.log

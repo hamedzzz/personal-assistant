@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المساعد الشخصي</title>
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --surface: #1a1a2e;
+    --surface2: #16213e;
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --green: #10b981;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --border: #2d2d4e;
+    --card-radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, #1a0533 0%, #0f0f1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+  }
+
+  .logo h1 { font-size: 20px; font-weight: 700; }
+  .logo p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .stat-badge {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .stat-badge span { color: var(--accent2); font-weight: 700; }
+
+  .refresh-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 16px;
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all .2s;
+  }
+  .refresh-btn:hover { border-color: var(--accent); color: var(--accent2); }
+
+  /* ── Layout ── */
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 24px;
+  }
+
+  /* ── Stats Row ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .stat-card.active { border-color: var(--accent2); background: rgba(124,58,237,.1); }
+
+  .stat-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .stat-card h3 { font-size: 26px; font-weight: 800; line-height: 1; }
+  .stat-card p { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+  /* ── Filters ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 999px;
+    padding: 8px 18px;
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all .2s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .search-box {
+    margin-right: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 16px;
+    color: var(--text);
+    font-size: 14px;
+    width: 220px;
+    outline: none;
+    transition: border .2s;
+  }
+  .search-box:focus { border-color: var(--accent); }
+  .search-box::placeholder { color: var(--text2); }
+
+  /* ── Cards Grid ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 20px;
+    position: relative;
+    transition: all .2s;
+    overflow: hidden;
+  }
+  .card:hover { border-color: #4a4a7a; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,.3); }
+  .card.done { opacity: .45; }
+
+  .card-accent {
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 0 var(--card-radius) var(--card-radius) 0;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .cat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .card-details {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-done, .btn-delete {
+    flex: 1;
+    border: none;
+    border-radius: 10px;
+    padding: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .2s;
+    font-weight: 600;
+  }
+
+  .btn-done {
+    background: rgba(16,185,129,.15);
+    color: var(--green);
+    border: 1px solid rgba(16,185,129,.3);
+  }
+  .btn-done:hover { background: rgba(16,185,129,.3); }
+
+  .btn-delete {
+    background: rgba(239,68,68,.1);
+    color: var(--red);
+    border: 1px solid rgba(239,68,68,.2);
+  }
+  .btn-delete:hover { background: rgba(239,68,68,.25); }
+
+  /* ── Expense chart ── */
+  .expense-section {
+    margin-top: 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 24px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .expense-bar-wrap { margin-bottom: 14px; }
+  .expense-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .expense-bar-label span:first-child { color: var(--text); }
+  .expense-bar-label span:last-child { color: var(--accent2); font-weight: 700; }
+  .expense-bar-bg {
+    background: rgba(255,255,255,.06);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .expense-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .6s ease;
+  }
+
+  /* ── Empty ── */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 64px 20px;
+    color: var(--text2);
+  }
+  .empty .emoji { font-size: 56px; margin-bottom: 16px; }
+  .empty p { font-size: 16px; }
+
+  /* ── Loading ── */
+  .loading {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 64px;
+    color: var(--text2);
+    font-size: 22px;
+  }
+
+  /* category colors */
+  .cat-مواعيد   { background: rgba(59,130,246,.15); color: #93c5fd; }
+  .cat-مهام     { background: rgba(16,185,129,.15); color: #6ee7b7; }
+  .cat-مصروفات  { background: rgba(245,158,11,.15); color: #fcd34d; }
+  .cat-تذكيرات  { background: rgba(239,68,68,.15);  color: #fca5a5; }
+  .cat-ملاحظات  { background: rgba(168,85,247,.15); color: #d8b4fe; }
+
+  .accent-مواعيد  { background: #3b82f6; }
+  .accent-مهام    { background: #10b981; }
+  .accent-مصروفات { background: #f59e0b; }
+  .accent-تذكيرات { background: #ef4444; }
+  .accent-ملاحظات { background: #a855f7; }
+
+  .icon-مواعيد  { background: rgba(59,130,246,.15); }
+  .icon-مهام    { background: rgba(16,185,129,.15); }
+  .icon-مصروفات { background: rgba(245,158,11,.15); }
+  .icon-تذكيرات { background: rgba(239,68,68,.15);  }
+  .icon-ملاحظات { background: rgba(168,85,247,.15); }
+
+  @media (max-width: 600px) {
+    header { padding: 16px; }
+    .main { padding: 16px; }
+    .search-box { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🤖</div>
+    <div>
+      <h1>المساعد الشخصي</h1>
+      <p>منظم مواعيد ومهام ومصروفات</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="stat-badge" id="total-badge">إجمالي: <span id="total-count">—</span></div>
+    <button class="refresh-btn" onclick="loadAll()">🔄 تحديث</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Stats -->
+  <div class="stats-grid" id="stats-grid">
+    <!-- injected -->
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button class="filter-btn active" data-cat="" onclick="setFilter(this, '')">الكل</button>
+    <button class="filter-btn" data-cat="مواعيد"  onclick="setFilter(this,'مواعيد')">📅 مواعيد</button>
+    <button class="filter-btn" data-cat="مهام"    onclick="setFilter(this,'مهام')">✅ مهام</button>
+    <button class="filter-btn" data-cat="مصروفات" onclick="setFilter(this,'مصروفات')">💰 مصروفات</button>
+    <button class="filter-btn" data-cat="تذكيرات" onclick="setFilter(this,'تذكيرات')">🔔 تذكيرات</button>
+    <button class="filter-btn" data-cat="ملاحظات" onclick="setFilter(this,'ملاحظات')">📝 ملاحظات</button>
+    <button class="filter-btn" data-cat="done"    onclick="setFilter(this,'done')">☑️ المنتهية</button>
+    <input class="search-box" id="search" placeholder="🔍 ابحث..." oninput="renderCards()">
+  </div>
+
+  <!-- Cards -->
+  <div class="cards-grid" id="cards-grid">
+    <div class="loading">⏳ جاري التحميل...</div>
+  </div>
+
+  <!-- Expense Summary -->
+  <div class="expense-section" id="expense-section" style="display:none">
+    <div class="section-title">💰 ملخص المصروفات</div>
+    <div id="expense-bars"></div>
+    <div style="margin-top:16px; font-size:15px; color:var(--text2)">
+      الإجمالي: <strong id="expense-total" style="color:var(--accent2)"></strong>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const EMOJI = {مواعيد:'📅', مهام:'✅', مصروفات:'💰', تذكيرات:'🔔', ملاحظات:'📝'};
+let allItems = [];
+let currentFilter = '';
+
+async function api(path, opts={}) {
+  const r = await fetch('/api' + path, opts);
+  return r.json();
+}
+
+async function loadAll() {
+  const [items, stats, expSummary] = await Promise.all([
+    api('/items'),
+    api('/stats'),
+    api('/expenses/summary'),
+  ]);
+  allItems = items;
+  renderStats(stats);
+  renderCards();
+  renderExpenses(expSummary);
+  document.getElementById('total-count').textContent = stats.total;
+}
+
+function renderStats(stats) {
+  const cats = [
+    {cat:'مواعيد',  emoji:'📅'},
+    {cat:'مهام',    emoji:'✅'},
+    {cat:'مصروفات', emoji:'💰'},
+    {cat:'تذكيرات', emoji:'🔔'},
+    {cat:'ملاحظات', emoji:'📝'},
+  ];
+  const byCat = Object.fromEntries((stats.by_category||[]).map(r=>[r.category, r.cnt]));
+  const done = stats.done || 0;
+
+  const grid = document.getElementById('stats-grid');
+  grid.innerHTML = cats.map(({cat, emoji}) => `
+    <div class="stat-card" onclick="setFilterById('${cat}')" id="sc-${cat}">
+      <div class="stat-icon icon-${cat}">${emoji}</div>
+      <div>
+        <h3>${byCat[cat]||0}</h3>
+        <p>${cat}</p>
+      </div>
+    </div>
+  `).join('') + `
+    <div class="stat-card" onclick="setFilterById('done')">
+      <div class="stat-icon" style="background:rgba(16,185,129,.15)">☑️</div>
+      <div><h3>${done}</h3><p>منتهية</p></div>
+    </div>`;
+}
+
+function setFilterById(cat) {
+  const btn = document.querySelector(`[data-cat="${cat}"]`);
+  if (btn) setFilter(btn, cat);
+}
+
+function setFilter(btn, cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = cat;
+  renderCards();
+}
+
+function renderCards() {
+  const search = document.getElementById('search').value.toLowerCase();
+  let items = allItems;
+
+  if (currentFilter === 'done') {
+    items = items.filter(i => i.done);
+  } else {
+    items = items.filter(i => !i.done);
+    if (currentFilter) items = items.filter(i => i.category === currentFilter);
+  }
+
+  if (search) {
+    items = items.filter(i =>
+      i.title.toLowerCase().includes(search) ||
+      (i.details||'').toLowerCase().includes(search)
+    );
+  }
+
+  const grid = document.getElementById('cards-grid');
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty"><div class="emoji">🎉</div><p>مفيش عناصر هنا دلوقتي</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(item => {
+    const emoji = EMOJI[item.category] || '📌';
+    const isOverdue = item.remind_at && !item.reminded && new Date(item.remind_at) < new Date();
+    return `
+    <div class="card ${item.done ? 'done' : ''}" id="card-${item.id}">
+      <div class="card-accent accent-${item.category}"></div>
+      <div class="card-header">
+        <span class="cat-badge cat-${item.category}">${emoji} ${item.category}</span>
+      </div>
+      <div class="card-title">${esc(item.title)}</div>
+      ${item.details ? `<div class="card-details">${esc(item.details)}</div>` : ''}
+      <div class="card-meta">
+        ${item.remind_at ? `<span class="meta-tag" style="${isOverdue?'color:#ef4444':''}">⏰ ${item.remind_at}</span>` : ''}
+        ${item.amount ? `<span class="meta-tag">💵 ${item.amount} ${item.currency}</span>` : ''}
+        <span class="meta-tag" style="color:#475569">${item.created_at ? item.created_at.slice(0,10) : ''}</span>
+      </div>
+      ${!item.done ? `
+      <div class="card-actions">
+        <button class="btn-done" onclick="markDone(${item.id})">✅ خلصت</button>
+        <button class="btn-delete" onclick="deleteItem(${item.id})">🗑️ حذف</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderExpenses(summary) {
+  const sec = document.getElementById('expense-section');
+  if (!summary.length) { sec.style.display='none'; return; }
+  sec.style.display = 'block';
+  const max = Math.max(...summary.map(r=>r.total));
+  const total = summary.reduce((a,r)=>a+r.total, 0);
+  document.getElementById('expense-total').textContent =
+    total.toFixed(2) + ' ' + (summary[0]?.currency||'EGP');
+  document.getElementById('expense-bars').innerHTML = summary.map(r => `
+    <div class="expense-bar-wrap">
+      <div class="expense-bar-label">
+        <span>${r.expense_category||'أخرى'}</span>
+        <span>${r.total.toFixed(2)} ${r.currency}</span>
+      </div>
+      <div class="expense-bar-bg">
+        <div class="expense-bar-fill" style="width:${(r.total/max*100).toFixed(1)}%"></div>
+      </div>
+    </div>`).join('');
+}
+
+async function markDone(id) {
+  await api(`/items/${id}/done`, {method:'PATCH'});
+  allItems = allItems.map(i => i.id===id ? {...i, done:1} : i);
+  renderCards();
+}
+
+async function deleteItem(id) {
+  if (!confirm('تمسح العنصر ده؟')) return;
+  await api(`/items/${id}`, {method:'DELETE'});
+  allItems = allItems.filter(i => i.id!==id);
+  renderCards();
+}
+
+function esc(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Auto-refresh every 30s
+setInterval(loadAll, 30000);
+loadAll();
+</script>
+</body>
+</html>
